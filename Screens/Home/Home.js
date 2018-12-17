@@ -8,7 +8,7 @@ export default class Home extends React.Component {
             <Container>
                 <Content padder>
                     <Button>
-                        <Text>Click Me!</Text>
+                        <Text>logout!</Text>
                     </Button>
                 </Content>
             </Container>

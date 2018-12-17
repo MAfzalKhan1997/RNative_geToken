@@ -1,33 +1,36 @@
 import HomeScreen from '../Screens/Home/Home'
-import LoginScreen from '../Screens/Login/Login'
+import LogInScreen from '../Screens/Login/Login'
+import AuthLoadingScreen from '../Screens/AuthLoader/AuthLoader'
 
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 
-const StackNavigator = createStackNavigator(
+const AppStack = createStackNavigator({ Home: HomeScreen });
+const AuthStack = createStackNavigator({ LogIn: LogInScreen });
+
+
+export default createAppContainer(createSwitchNavigator(
     {
-        Home: {
-            screen: HomeScreen,
-            navigationOptions: () => ({
-                title: 'Home',
-                headerStyle: {
-                    backgroundColor: '#3f51b5',
-                },
-                headerTintColor: '#fff',
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                },
-            })
-        },
-        Login: {
-            screen: LoginScreen,
-            header: null,
-        },
+        AuthLoading: AuthLoadingScreen,
+        App: AppStack,
+        Auth: AuthStack,
     },
     {
-        initialRouteName: "Home"
+        initialRouteName: 'AuthLoading',
     }
-)
+));
 
-const Navigator = createAppContainer(StackNavigator)
 
-export default Navigator
+
+                    // Home: {
+                    //     screen: HomeScreen,
+                    //     navigationOptions: () => ({
+                    //         title: 'Home',
+                    //         headerStyle: {
+                    //             backgroundColor: '#3f51b5',
+                    //         },
+                    //         headerTintColor: '#fff',
+                    //         headerTitleStyle: {
+                    //             fontWeight: 'bold',
+                    //         },
+                    //     })
+                    // }, 
