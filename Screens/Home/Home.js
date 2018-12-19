@@ -3,6 +3,7 @@ import { AsyncStorage, View } from 'react-native';
 import { Container, Content, Button, Text } from 'native-base';
 
 import AuthState from '../../Helper/AuthState'
+import firebase from '../../Config/firebase';
 
 export default class Home extends React.Component {
 
@@ -12,10 +13,23 @@ export default class Home extends React.Component {
         return null
     }
 
+
     logOut = async () => {
-        await AsyncStorage.removeItem('userToken');
-        this.props.navigation.navigate('Auth');
-    };
+
+        firebase.auth().signOut().then(function () {
+
+            console.log("SignedOut")
+            // props.history.push('/')
+
+        }).catch(function (error) {
+            console.log('Error:', error.message)
+        });
+    }
+
+    // logOut = async () => {
+    //     await AsyncStorage.removeItem('userToken');
+    //     this.props.navigation.navigate('Auth');
+    // };
 
     render() {
         return (
