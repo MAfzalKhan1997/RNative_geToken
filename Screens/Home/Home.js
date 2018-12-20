@@ -7,10 +7,8 @@ import firebase from '../../Config/firebase';
 
 export default class Home extends React.Component {
 
-    static getDerivedStateFromProps() {
-
+    componentWillMount() {
         AuthState()
-        return null
     }
 
 
@@ -19,11 +17,13 @@ export default class Home extends React.Component {
         firebase.auth().signOut().then(function () {
 
             console.log("SignedOut")
-            // props.history.push('/')
+            // AuthState()
 
         }).catch(function (error) {
             console.log('Error:', error.message)
         });
+        // AsyncStorage.removeItem('userToken');
+        this.props.navigation.navigate('Auth');
     }
 
     // logOut = async () => {
@@ -36,7 +36,7 @@ export default class Home extends React.Component {
             <Container>
                 <Content padder>
                     <Button onPress={() => this.logOut()}>
-                        <Text>logout</Text>
+                        <Text>Sign Out</Text>
                     </Button>
                 </Content>
             </Container>
