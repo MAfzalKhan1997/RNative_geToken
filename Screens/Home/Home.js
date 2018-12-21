@@ -22,14 +22,10 @@ export default class Home extends React.Component {
         }).catch(function (error) {
             console.log('Error:', error.message)
         });
-        // AsyncStorage.removeItem('userToken');
+        AsyncStorage.removeItem('userToken');
         this.props.navigation.navigate('Auth');
     }
 
-    // logOut = async () => {
-    //     await AsyncStorage.removeItem('userToken');
-    //     this.props.navigation.navigate('Auth');
-    // };
 
     render() {
         return (

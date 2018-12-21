@@ -5,23 +5,84 @@ import { Container, Content, Button, Text } from 'native-base';
 import AuthState from '../../Helper/AuthState'
 import firebase from '../../Config/firebase';
 
+// ****************This code just remove the warning from display screen not from the console****************
+// import { YellowBox } from 'react-native';
+// import _ from 'lodash';
+
+// YellowBox.ignoreWarnings(['Setting a timer']);
+// const _console = _.clone(console);
+// console.warn = message => {
+//     if (message.indexOf('Setting a timer') <= -1) {
+//         _console.warn(message);
+//     }
+// };
+
+import { Platform, InteractionManager } from 'react-native';
+
+const _setTimeout = global.setTimeout;
+const _clearTimeout = global.clearTimeout;
+const MAX_TIMER_DURATION_MS = 60 * 1000;
+if (Platform.OS === 'android') {
+    // Work around issue `Setting a timer for long time`
+    // see: https://github.com/firebase/firebase-js-sdk/issues/97
+    const timerFix = {};
+    const runTask = (id, fn, ttl, args) => {
+        const waitingTime = ttl - Date.now();
+        if (waitingTime <= 1) {
+            InteractionManager.runAfterInteractions(() => {
+                if (!timerFix[id]) {
+                    return;
+                }
+                delete timerFix[id];
+                fn(...args);
+            });
+            return;
+        }
+
+        const afterTime = Math.min(waitingTime, MAX_TIMER_DURATION_MS);
+        timerFix[id] = _setTimeout(() => runTask(id, fn, ttl, args), afterTime);
+    };
+
+    global.setTimeout = (fn, time, ...args) => {
+        if (MAX_TIMER_DURATION_MS < time) {
+            const ttl = Date.now() + time;
+            const id = '_lt_' + Object.keys(timerFix).length;
+            runTask(id, fn, ttl, args);
+            return id;
+        }
+        return _setTimeout(fn, time, ...args);
+    };
+
+    global.clearTimeout = id => {
+        if (typeof id === 'string' && id.startWith('_lt_')) {
+            _clearTimeout(timerFix[id]);
+            delete timerFix[id];
+            return;
+        }
+        _clearTimeout(id);
+    };
+}
+
+
+
 export default class Login extends React.Component {
 
     static navigationOptions = {
         title: 'SignIn',
     };
 
-    constructor() {
-        super()
+    // constructor() {
+    //     super()
 
-        this.state = {
+    //     this.state = {
 
-        }
-    }
+    //     }
+    // }
 
     componentWillMount() {
         AuthState()
     }
+
 
     logIn = async () => {
         const {
@@ -37,18 +98,42 @@ export default class Login extends React.Component {
 
         if (type === 'success') {
 
-            // await AsyncStorage.setItem('userToken', token);
-            console.log('loginToken', token)
-            const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,birthday&access_token=${token}`);
-            console.log(await response.json())
-            // Build Firebase credential with the Facebook access token.
+            await AsyncStorage.setItem('userToken', token);
+
+            // console.log('loginToken', token)
+            // const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,birthday&access_token=${token}`);
+            // console.log(await response.json())
+
             const credential = firebase.auth.FacebookAuthProvider.credential(token);
-            // Sign in with credential from the Facebook user.
             firebase.auth().signInAndRetrieveDataWithCredential(credential)
+                .then((result) => {
+                    let user = result.user.toJSON()
+                    // console.log('user json', user)
+                    let userData = user.providerData[0]
+                    // console.log('login user', userData) 
+
+                    var userObject = {
+                        displayName: userData.displayName,
+                        email: userData.email,
+                        photoURL: userData.photoURL,
+                        uid: user.uid
+                    };
+
+                    console.log('userObject', userObject)
+
+                    firebase.database().ref("/").child("users/" + user.uid).set(userObject)
+                        .then(() => {
+                            console.log("User added to DataBase.");
+                            this.props.navigation.navigate('App');
+                        })
+                        .catch(function (error) {
+                            console.log('Error:', error.message)
+                        });
+
+                })
                 .catch((error) => {
                     alert('error', error)
                 });
-            // this.props.navigation.navigate('App');
         }
         // else {
         //     // type === 'cancel'
