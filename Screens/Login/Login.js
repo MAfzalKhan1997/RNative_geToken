@@ -68,7 +68,8 @@ if (Platform.OS === 'android') {
 export default class Login extends React.Component {
 
     static navigationOptions = {
-        title: 'SignIn',
+        // title: 'SignIn',
+        header: null,
     };
 
     // constructor() {
@@ -81,13 +82,13 @@ export default class Login extends React.Component {
 
     componentWillMount() {
         AuthState()
-        this.check()
+        // this.check()
     }
 
-    check = async () => {
-        const userObject = JSON.parse(await AsyncStorage.getItem('userObject'));
-        console.log('Login userObject', userObject)
-    }
+    // check = async () => {
+    //     const userObject = JSON.parse(await AsyncStorage.getItem('userObject'));
+    //     console.log('Login userObject', userObject)
+    // }
 
     logIn = async () => {
         const {
@@ -124,7 +125,7 @@ export default class Login extends React.Component {
                         uid: user.uid
                     };
 
-                    console.log('userObject', userObject)
+                    console.log('Login userObject', userObject)
 
                     firebase.database().ref("/").child("users/" + user.uid).set(userObject)
                         .then(() => {

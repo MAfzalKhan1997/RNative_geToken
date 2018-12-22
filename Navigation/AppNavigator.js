@@ -1,10 +1,15 @@
 import HomeScreen from '../Screens/Home/Home'
+import CompaniesScreen from '../Screens/Companies/Companies'
 import LogInScreen from '../Screens/Login/Login'
 import AuthLoadingScreen from '../Screens/AuthLoader/AuthLoader'
 
 import { createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 
-const AppStack = createStackNavigator({ Home: HomeScreen });
+const AppStack = createStackNavigator({
+    Home: HomeScreen,
+    Companies: CompaniesScreen,
+});
+
 const AuthStack = createStackNavigator({ LogIn: LogInScreen });
 
 

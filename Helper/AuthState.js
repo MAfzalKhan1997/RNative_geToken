@@ -1,6 +1,5 @@
 import firebase from '../Config/firebase';
 
-
 const authState = () => {
 
     firebase.auth().onAuthStateChanged(user => {
