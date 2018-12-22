@@ -81,8 +81,13 @@ export default class Login extends React.Component {
 
     componentWillMount() {
         AuthState()
+        this.check()
     }
 
+    check = async () => {
+        const userObject = JSON.parse(await AsyncStorage.getItem('userObject'));
+        console.log('Login userObject', userObject)
+    }
 
     logIn = async () => {
         const {
@@ -124,6 +129,7 @@ export default class Login extends React.Component {
                     firebase.database().ref("/").child("users/" + user.uid).set(userObject)
                         .then(() => {
                             console.log("User added to DataBase.");
+                            AsyncStorage.setItem('userObject', JSON.stringify(userObject));
                             this.props.navigation.navigate('App');
                         })
                         .catch(function (error) {
@@ -132,7 +138,7 @@ export default class Login extends React.Component {
 
                 })
                 .catch((error) => {
-                    alert('error', error)
+                    console.log('Error:', error.message)
                 });
         }
         // else {

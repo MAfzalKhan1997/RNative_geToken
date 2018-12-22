@@ -8,6 +8,8 @@ import {
     View,
 } from 'react-native';
 
+import AuthState from '../../Helper/AuthState'
+
 export default class AuthLoader extends React.Component {
     constructor(props) {
         super(props);
@@ -19,7 +21,7 @@ export default class AuthLoader extends React.Component {
     // };
 
     async componentWillMount() {
-
+        AuthState()
         await Expo.Font.loadAsync({
             'Roboto': require('native-base/Fonts/Roboto.ttf'),
             'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf')
@@ -27,7 +29,8 @@ export default class AuthLoader extends React.Component {
 
         // Fetch the token from storage then navigate to our appropriate place
         const userToken = await AsyncStorage.getItem('userToken');
-        // console.log('userToken', userToken)
+        // const userObject = JSON.parse(await AsyncStorage.getItem('userObject'));
+        // console.log('userObject', userObject)
         // This will switch to the App screen or Auth screen and this loading
         // screen will be unmounted and thrown away.
         this.props.navigation.navigate(userToken ? 'App' : 'Auth');
