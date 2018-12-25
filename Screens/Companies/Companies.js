@@ -1,8 +1,7 @@
 import React from 'react';
-import { AsyncStorage, View, Image, } from 'react-native';
+import { Modal, TouchableHighlight, View, Alert, Image, } from 'react-native';
 import { Container, Content, Button, Text, Form, Item, Input, Label } from 'native-base';
-import { Modal, TouchableHighlight, View, Alert } from 'react-native';
-import { ImagePicker } from 'expo';
+import { Permissions, ImagePicker } from 'expo';
 
 // import AuthState from '../../Helper/AuthState'
 // import firebase from '../../Config/firebase';
@@ -19,9 +18,39 @@ export default class Companies extends React.Component {
         this.state = {
             modalVisible: false,
 
-            image: null,
+            images: null,
         };
     }
+
+    // async componentDidMount() {
+    //     let status;
+    //     status = await Permissions.getAsync(Permissions.CAMERA);
+    //     let statusCam = status.status;
+    //     console.log("Camera Permissions: ", statusCam);
+
+    //     status = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+    //     let statusCamRoll = status.status;
+    //     console.log("Camera_Roll Permissions: ", statusCamRoll);
+
+    //     if (statusCam !== "granted") {
+    //         console.log("Requesting Camera Permissions");
+    //         status = await Permissions.askAsync(Permissions.CAMERA);
+    //         statusCam = status.status;
+    //     }
+
+    //     if (statusCamRoll !== "granted") {
+    //         console.log("Requesting Camera_Roll Permissions");
+    //         status = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    //         statusCamRoll = status.status;
+    //     }
+
+    //     if (statusNotifications !== "granted" || statusLocation !== "granted") {
+    //         console.log("Permissions not granted");
+    //         return;
+    //     }
+
+    //     console.log("Permissions Granted!");
+    // }
 
     setModalVisible(visible) {
         this.setState({ modalVisible: visible });
@@ -42,7 +71,68 @@ export default class Companies extends React.Component {
     }
 
     _pickImage = async () => {
+
+        let status;
+
+        status = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+        let statusCamRoll = status.status;
+        console.log("Camera_Roll Permissions: ", statusCamRoll);
+
+
+        if (statusCamRoll !== "granted") {
+            console.log("Requesting Camera_Roll Permissions");
+            status = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            statusCamRoll = status.status;
+        }
+
+        if (statusCamRoll !== "granted") {
+            console.log("Permission not granted");
+            return;
+        }
+        console.log("Permission Granted!");
+
         let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [1, 1],
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            this.setState({ image: result.uri });
+        }
+    }
+
+    _clickImage = async () => {
+
+        let status;
+        status = await Permissions.getAsync(Permissions.CAMERA);
+        let statusCam = status.status;
+        console.log("Camera Permissions: ", statusCam);
+
+        status = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+        let statusCamRoll = status.status;
+        console.log("Camera_Roll Permissions: ", statusCamRoll);
+
+        if (statusCam !== "granted") {
+            console.log("Requesting Camera Permissions");
+            status = await Permissions.askAsync(Permissions.CAMERA);
+            statusCam = status.status;
+        }
+
+        if (statusCamRoll !== "granted") {
+            console.log("Requesting Camera_Roll Permissions");
+            status = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            statusCamRoll = status.status;
+        }
+
+        if (statusCam !== "granted" || statusCamRoll !== "granted") {
+            console.log("Permissions not granted");
+            return;
+        }
+        console.log("Permissions Granted!");
+
+        let result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             aspect: [1, 1],
         });
@@ -84,11 +174,6 @@ export default class Companies extends React.Component {
                                     onPress={this._pickImage}>
                                     <Text>Pick an image from camera roll</Text>
                                 </Button>
-
-                                {/* <Button
-                                    title="Pick an image from camera roll"
-                                    onPress={this._pickImage}
-                                /> */}
 
                                 {image &&
                                     <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}

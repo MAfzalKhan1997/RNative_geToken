@@ -106,9 +106,9 @@ export default class Login extends React.Component {
 
             await AsyncStorage.setItem('userToken', token);
 
-            // console.log('loginToken', token)
-            // const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,birthday&access_token=${token}`);
-            // console.log(await response.json())
+            console.log('loginToken', token)
+            const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,birthday&access_token=${token}`);
+            console.log(await response.json())
 
             const credential = firebase.auth.FacebookAuthProvider.credential(token);
             firebase.auth().signInAndRetrieveDataWithCredential(credential)
