@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, TouchableHighlight, TouchableOpacity, View, Alert, Image, } from 'react-native';
+import { Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Alert, Image, } from 'react-native';
 import { Container, Content, Button, Text, Form, Item, Input, Label, List, ListItem, Icon, Left, Body, Right, } from 'native-base';
 import { Permissions, ImagePicker } from 'expo';
 
@@ -17,9 +17,9 @@ export default class Companies extends React.Component {
 
         this.state = {
             modalVisible: false,
-            innerModalVisible: false,
+            // innerModalVisible: false,
 
-            images: null,
+            images: ['', '', ''],
         };
     }
 
@@ -28,9 +28,9 @@ export default class Companies extends React.Component {
         this.setState({ modalVisible: visible });
     }
 
-    setInnerModalVisible(visible) {
-        this.setState({ innerModalVisible: visible });
-    }
+    // setInnerModalVisible(visible) {
+    //     this.setState({ innerModalVisible: visible });
+    // }
     // componentWillMount() {
     //     AuthState()
     //     // this.check()
@@ -45,8 +45,8 @@ export default class Companies extends React.Component {
         alert()
     }
 
-    _pickImage = async () => {
-
+    async _pickImage(index) {
+        const { images } = this.state;
         let status;
 
         status = await Permissions.getAsync(Permissions.CAMERA_ROLL);
@@ -71,16 +71,18 @@ export default class Companies extends React.Component {
             aspect: [1, 1],
         });
 
-        console.log(result);
+        // console.log(result);
 
         if (!result.cancelled) {
-            this.setState({ image: result.uri });
+            images[index] = result.uri;
+            this.setState({ images });
         }
     }
 
-    _clickImage = async () => {
-
+    async _clickImage(index) {
+        const { images } = this.state;
         let status;
+
         status = await Permissions.getAsync(Permissions.CAMERA);
         let statusCam = status.status;
         console.log("Camera Permissions: ", statusCam);
@@ -112,16 +114,17 @@ export default class Companies extends React.Component {
             aspect: [1, 1],
         });
 
-        console.log(result);
+        // console.log(result);
 
         if (!result.cancelled) {
-            this.setState({ image: result.uri });
+            images[index] = result.uri;
+            this.setState({ images });
         }
     }
 
     render() {
-        let { image } = this.state;
-
+        let { images } = this.state;
+        console.log(images)
         return (
             <Container>
                 <Content padder>
@@ -146,24 +149,33 @@ export default class Companies extends React.Component {
                                         <Input keyboardType='numeric' />
                                     </Item>
 
-                                    <Button full
-                                        onPress={() =>
-                                            Alert.alert(
-                                                'Upload Image',
-                                                'Choose...',
-                                                [
-                                                    { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                                                    { text: 'Camera', onPress: this._clickImage },
-                                                    { text: 'Gallery', onPress: this._pickImage },
-                                                ],
+                                    {
+
+                                        images.map((value, index) => {
+                                            return (
+                                                <TouchableOpacity key={index} onPress={() =>
+                                                    Alert.alert(
+                                                        'Upload Image',
+                                                        'Choose...',
+                                                        [
+                                                            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                                                            { text: 'Camera', onPress: () => this._clickImage(index) },
+                                                            { text: 'Gallery', onPress: () => this._pickImage(index) },
+                                                        ],
+                                                    )
+                                                }>
+
+                                                    {images[index] !== '' ?
+                                                        <Image source={{ uri: images[index] }} style={{ width: 100, height: 100 }} /> :
+                                                        <View style={{ width: 100, height: 100, backgroundColor: '#d7e2f4', paddingHorizontal: 23, paddingVertical: 35 }}>
+                                                            <Text>Upload</Text>
+                                                        </View>
+                                                    }
+                                                </TouchableOpacity>
                                             )
-                                        }>
-                                        <Text>upload image</Text>
-                                    </Button>
+                                        })
+                                    }
 
-
-                                    {image &&
-                                        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
                                 </Form>
                             </View>
 
@@ -193,3 +205,12 @@ export default class Companies extends React.Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        // backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
