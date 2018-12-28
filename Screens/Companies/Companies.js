@@ -3,6 +3,7 @@ import { Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Alert, I
 import { Container, Content, Button, Text, Form, Item, Input, Label, List, ListItem, Icon, Left, Body, Right, } from 'native-base';
 import { Permissions, ImagePicker } from 'expo';
 
+import DateTimePicker from 'react-native-modal-datetime-picker';
 // import AuthState from '../../Helper/AuthState'
 // import firebase from '../../Config/firebase';
 
@@ -18,6 +19,8 @@ export default class Companies extends React.Component {
         this.state = {
             modalVisible: false,
             // innerModalVisible: false,
+            startDateTimePickerVisible: false,
+            endDateTimePickerVisible: false,
 
             images: ['', '', ''],
         };
@@ -122,6 +125,24 @@ export default class Companies extends React.Component {
         }
     }
 
+    showStartDateTimePicker(visible) {
+        this.setState({ startDateTimePickerVisible: visible });
+    }
+
+    showEndDateTimePicker(visible) {
+        this.setState({ endDateTimePickerVisible: visible });
+    }
+
+    handleStartDatePicked = (date) => {
+        console.log('A Start Time has been picked: ', date.toLocaleTimeString());
+        this.showStartDateTimePicker(false);
+    };
+
+    handleEndDatePicked = (date) => {
+        console.log('A End Time has been picked: ', date.toLocaleTimeString());
+        this.showEndDateTimePicker(false);
+    };
+
     render() {
         let { images } = this.state;
         console.log(images)
@@ -148,7 +169,7 @@ export default class Companies extends React.Component {
                                         <Label>Since</Label>
                                         <Input keyboardType='numeric' />
                                     </Item>
-
+                                    <Text>Certificates | 3*</Text>
                                     {
 
                                         images.map((value, index) => {
@@ -175,6 +196,30 @@ export default class Companies extends React.Component {
                                             )
                                         })
                                     }
+
+                                    <TouchableOpacity onPress={() => this.showStartDateTimePicker(true)}>
+                                        <Text>Start DatePicker</Text>
+                                    </TouchableOpacity>
+                                    <DateTimePicker
+                                        isVisible={this.state.startDateTimePickerVisible}
+                                        onConfirm={this.handleStartDatePicked}
+                                        onCancel={() => this.showStartDateTimePicker(false)}
+                                        mode='time'
+                                    // is24Hour={false}
+                                    // datePickerModeAndroid='spinner/calendar'
+                                    />
+
+                                    <TouchableOpacity onPress={() => this.showEndDateTimePicker(true)}>
+                                        <Text>End DatePicker</Text>
+                                    </TouchableOpacity>
+                                    <DateTimePicker
+                                        isVisible={this.state.endDateTimePickerVisible}
+                                        onConfirm={this.handleEndDatePicked}
+                                        onCancel={() => this.showEndDateTimePicker(false)}
+                                        mode='time'
+                                    // is24Hour={false}
+                                    // datePickerModeAndroid='spinner/calendar'
+                                    />
 
                                 </Form>
                             </View>
