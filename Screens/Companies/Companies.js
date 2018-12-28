@@ -221,6 +221,21 @@ export default class Companies extends React.Component {
                                     // datePickerModeAndroid='spinner/calendar'
                                     />
 
+                                    <Item disabled>
+                                        {/* <TouchableOpacity onPress={() => this.showStartDateTimePicker(true)}> */}
+                                        <Input
+                                            value='hello'
+                                            disabled placeholder='Disabled Textbox' />
+                                        {/* </TouchableOpacity> */}
+
+                                        {/* <TouchableOpacity onPress={() => this.showEndDateTimePicker(true)}>
+                                            <Input
+                                                value='hello'
+                                                disabled placeholder='Disabled Textbox' />
+                                        </TouchableOpacity> */}
+                                        {/* <Icon name='information-circle' /> */}
+                                    </Item>
+
                                 </Form>
                             </View>
 
