@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Alert, Image, } from 'react-native';
+import { TextInput, Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Alert, Image, } from 'react-native';
 import { Container, Content, Button, Text, Form, Item, Input, Label, List, ListItem, Icon, Left, Body, Right, } from 'native-base';
 import { Permissions, ImagePicker } from 'expo';
 
@@ -221,21 +221,20 @@ export default class Companies extends React.Component {
                                     // datePickerModeAndroid='spinner/calendar'
                                     />
 
-                                    <Item disabled>
-                                        {/* <TouchableOpacity onPress={() => this.showStartDateTimePicker(true)}> */}
-                                        <Input
-                                            value='hello'
-                                            disabled placeholder='Disabled Textbox' />
-                                        {/* </TouchableOpacity> */}
+                                    {/* <Item disabled> */}
+                                    {/* <TouchableOpacity onPress={() => this.showStartDateTimePicker(true)}> */}
+                                    {/* <Input */}
+                                    {/* value='hello' */}
+                                    {/* disabled placeholder='Disabled Textbox' /> */}
+                                    {/* </TouchableOpacity> */}
 
-                                        {/* <TouchableOpacity onPress={() => this.showEndDateTimePicker(true)}>
+                                    {/* <TouchableOpacity onPress={() => this.showEndDateTimePicker(true)}>
                                             <Input
                                                 value='hello'
                                                 disabled placeholder='Disabled Textbox' />
                                         </TouchableOpacity> */}
-                                        {/* <Icon name='information-circle' /> */}
-                                    </Item>
-
+                                    {/* <Icon name='information-circle' /> */}
+                                    {/* </Item> */}
                                 </Form>
                             </View>
 
