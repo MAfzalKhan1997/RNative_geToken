@@ -1,9 +1,10 @@
 import React from 'react';
 import { TextInput, Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Alert, Image, } from 'react-native';
-import { Container, Content, Button, Text, Form, Item, Input, Label, List, ListItem, Icon, Left, Body, Right, } from 'native-base';
+import { Container, Header, Content, Button, Text, Form, Item, Input, Label, List, ListItem, Icon, Left, Body, Right, } from 'native-base';
 import { Permissions, ImagePicker } from 'expo';
 
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import { white } from 'ansi-colors';
 // import AuthState from '../../Helper/AuthState'
 // import firebase from '../../Config/firebase';
 
@@ -18,10 +19,13 @@ export default class Companies extends React.Component {
 
         this.state = {
             modalVisible: false,
-            // innerModalVisible: false,
+            locModalVisible: false,
+
             startDateTimePickerVisible: false,
             endDateTimePickerVisible: false,
 
+            companyName: null,
+            since: null,
             images: ['', '', ''],
             startTime: 'N/A',
             endTime: 'N/A'
@@ -175,6 +179,7 @@ export default class Companies extends React.Component {
         this.showEndDateTimePicker(false);
     };
 
+
     // convertTime24to12(time24) {
     //     var tmpArr = time24.split(':'), time12;
     //     if (+tmpArr[0] == 12) {
@@ -192,32 +197,42 @@ export default class Companies extends React.Component {
     //     }
     //     return time12;
     // }
+    setLocModal(visible) {
+        this.setModalVisible(false)
+        this.setState({ locModalVisible: visible });
+    }
 
     render() {
-        let { images, startTime, endTime } = this.state;
+        let { companyName, since, images, startTime, endTime, } = this.state;
         console.log(images)
+        console.log(companyName, since)
         return (
             <Container>
                 <Content padder>
 
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         transparent={false}
                         visible={this.state.modalVisible}
                         onRequestClose={() => {
                             alert('Modal has been closed.');
                         }}>
-
                         <View>
 
                             <Form>
                                 <Item floatingLabel>
                                     <Label>Company Name</Label>
-                                    <Input />
+                                    <Input
+                                        onChangeText={(value) => this.setState({ companyName: value })}
+                                        value={companyName}
+                                    />
                                 </Item>
                                 <Item floatingLabel>
                                     <Label>Since</Label>
-                                    <Input keyboardType='numeric' />
+                                    <Input
+                                        onChangeText={(value) => this.setState({ since: value })}
+                                        value={since}
+                                        keyboardType='numeric' />
                                 </Item>
                             </Form>
 
@@ -283,24 +298,64 @@ export default class Companies extends React.Component {
                             </View>
 
                             <View>
-                                <Button full
+                                <Button full danger
                                     onPress={() => this.setModalVisible(false)}>
                                     <Text>cancel</Text>
                                 </Button>
-
                                 <Button full
-                                    info onPress={() => this.addCompany()}>
-                                    <Text>add my company</Text>
+                                    onPress={() => this.setLocModal(true)}>
+                                    <Text>Next</Text>
                                 </Button>
                             </View>
 
                         </View>
-
                     </Modal>
 
-                    <Button block onPress={() => {
-                        this.setModalVisible(true)
-                    }}>
+                    <Modal
+                        animationType="fade"
+                        transparent={false}
+                        visible={this.state.locModalVisible}
+                        onRequestClose={() => {
+                            alert('Modal has been closed.');
+                        }}>
+                        <Container>
+                            <Header searchBar rounded style={{ backgroundColor: 'white' }}>
+                                <Item>
+                                    <Icon name="ios-search" />
+                                    <Input placeholder="Search Your Place Here" />
+                                    <Icon name="ios-pin" />
+                                </Item>
+                                {/* <Button>
+                                    <Text>Search</Text>
+                                </Button> */}
+                            </Header>
+
+                            <Form>
+                                <Item floatingLabel>
+                                    <Label>Company Name</Label>
+                                    <Input
+                                        onChangeText={(value) => this.setState({ companyName: value })}
+                                        value={companyName}
+                                    />
+                                </Item>
+                            </Form>
+
+                            <Button full
+                                onPress={() => this.setLocModal(false)}>
+                                <Text>cancel</Text>
+                            </Button>
+
+                            <Button full
+                                success onPress={() => this.addCompany()}>
+                                <Text>add my company</Text>
+                            </Button>
+
+
+                        </Container>
+                    </Modal>
+
+                    <Button block
+                        onPress={() => { this.setModalVisible(true) }}>
                         <Text>add</Text>
                     </Button>
 
