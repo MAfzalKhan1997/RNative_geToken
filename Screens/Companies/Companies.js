@@ -136,14 +136,62 @@ export default class Companies extends React.Component {
     }
 
     handleStartDatePicked = (date) => {
-        console.log('A Start Time has been picked: ', date.toLocaleTimeString());
+        var time = date.toLocaleTimeString()
+        console.log('A Start Time has been picked: ', time);
+        if (time.slice(0, 2) > 12) {
+            this.setState({ startTime: time.slice(0, 2) - 12 + time.slice(2, 5) + ' PM' })
+        }
+        else
+            if (time.slice(0, 2) == 12) {
+                this.setState({ startTime: '12' + time.slice(2, 5) + ' PM' })
+            }
+            else
+                if (time.slice(0, 2) == 0) {
+                    this.setState({ startTime: '12' + time.slice(2, 5) + ' AM' })
+                }
+                else
+                    this.setState({ startTime: time.slice(0, 5) + ' AM' })
+
         this.showStartDateTimePicker(false);
     };
 
     handleEndDatePicked = (date) => {
-        console.log('A End Time has been picked: ', date.toLocaleTimeString());
+        var time = date.toLocaleTimeString()
+        console.log('A End Time has been picked: ', time);
+        if (time.slice(0, 2) > 12) {
+            this.setState({ endTime: time.slice(0, 2) - 12 + time.slice(2, 5) + ' PM' })
+        }
+        else
+            if (time.slice(0, 2) == 12) {
+                this.setState({ endTime: '12' + time.slice(2, 5) + ' PM' })
+            }
+            else
+                if (time.slice(0, 2) == 0) {
+                    this.setState({ endTime: '12' + time.slice(2, 5) + ' AM' })
+                }
+                else
+                    this.setState({ endTime: time.slice(0, 5) + ' AM' })
+
         this.showEndDateTimePicker(false);
     };
+
+    // convertTime24to12(time24) {
+    //     var tmpArr = time24.split(':'), time12;
+    //     if (+tmpArr[0] == 12) {
+    //         time12 = tmpArr[0] + ':' + tmpArr[1] + ' pm';
+    //     } else {
+    //         if (+tmpArr[0] == 00) {
+    //             time12 = '12:' + tmpArr[1] + ' am';
+    //         } else {
+    //             if (+tmpArr[0] > 12) {
+    //                 time12 = (+tmpArr[0] - 12) + ':' + tmpArr[1] + ' pm';
+    //             } else {
+    //                 time12 = (+tmpArr[0]) + ':' + tmpArr[1] + ' am';
+    //             }
+    //         }
+    //     }
+    //     return time12;
+    // }
 
     render() {
         let { images, startTime, endTime } = this.state;
@@ -220,7 +268,7 @@ export default class Companies extends React.Component {
                                     onConfirm={this.handleStartDatePicked}
                                     onCancel={() => this.showStartDateTimePicker(false)}
                                     mode='time'
-                                // is24Hour={false}
+                                    is24Hour={false}
                                 // datePickerModeAndroid='spinner/calendar'
                                 />
                                 <DateTimePicker
@@ -228,7 +276,7 @@ export default class Companies extends React.Component {
                                     onConfirm={this.handleEndDatePicked}
                                     onCancel={() => this.showEndDateTimePicker(false)}
                                     mode='time'
-                                // is24Hour={false}
+                                    is24Hour={false}
                                 // datePickerModeAndroid='spinner/calendar'
                                 />
 
@@ -242,7 +290,7 @@ export default class Companies extends React.Component {
 
                                 <Button full
                                     info onPress={() => this.addCompany()}>
-                                    <Text>add my company</Text> 
+                                    <Text>add my company</Text>
                                 </Button>
                             </View>
 
