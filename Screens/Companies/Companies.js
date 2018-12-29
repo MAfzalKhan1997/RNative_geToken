@@ -23,6 +23,8 @@ export default class Companies extends React.Component {
             endDateTimePickerVisible: false,
 
             images: ['', '', ''],
+            startTime: 'N/A',
+            endTime: 'N/A'
         };
     }
 
@@ -144,7 +146,7 @@ export default class Companies extends React.Component {
     };
 
     render() {
-        let { images } = this.state;
+        let { images, startTime, endTime } = this.state;
         console.log(images)
         return (
             <Container>
@@ -157,19 +159,23 @@ export default class Companies extends React.Component {
                         onRequestClose={() => {
                             alert('Modal has been closed.');
                         }}>
+
                         <View>
 
-                            <View>
-                                <Form>
-                                    <Item floatingLabel>
-                                        <Label>Company Name</Label>
-                                        <Input />
-                                    </Item>
-                                    <Item floatingLabel last >
-                                        <Label>Since</Label>
-                                        <Input keyboardType='numeric' />
-                                    </Item>
-                                    <Text>Certificates | 3*</Text>
+                            <Form>
+                                <Item floatingLabel>
+                                    <Label>Company Name</Label>
+                                    <Input />
+                                </Item>
+                                <Item floatingLabel>
+                                    <Label>Since</Label>
+                                    <Input keyboardType='numeric' />
+                                </Item>
+                            </Form>
+
+                            <View style={{ padding: 15 }}>
+                                <Text>Certificates | 3*</Text>
+                                <View style={{ flexWrap: "wrap", flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                     {
 
                                         images.map((value, index) => {
@@ -196,46 +202,36 @@ export default class Companies extends React.Component {
                                             )
                                         })
                                     }
+                                </View>
+
+                                <Text>Select Timings</Text>
+                                <View style={{ flexWrap: "wrap", flexDirection: 'row', alignItems: 'center' }}>
 
                                     <TouchableOpacity onPress={() => this.showStartDateTimePicker(true)}>
-                                        <Text>Start DatePicker</Text>
+                                        <Text style={{ fontSize: 20 }} >{startTime}</Text>
                                     </TouchableOpacity>
-                                    <DateTimePicker
-                                        isVisible={this.state.startDateTimePickerVisible}
-                                        onConfirm={this.handleStartDatePicked}
-                                        onCancel={() => this.showStartDateTimePicker(false)}
-                                        mode='time'
-                                    // is24Hour={false}
-                                    // datePickerModeAndroid='spinner/calendar'
-                                    />
-
+                                    <Text style={{ fontSize: 20 }} > - </Text>
                                     <TouchableOpacity onPress={() => this.showEndDateTimePicker(true)}>
-                                        <Text>End DatePicker</Text>
+                                        <Text style={{ fontSize: 20 }} >{endTime}</Text>
                                     </TouchableOpacity>
-                                    <DateTimePicker
-                                        isVisible={this.state.endDateTimePickerVisible}
-                                        onConfirm={this.handleEndDatePicked}
-                                        onCancel={() => this.showEndDateTimePicker(false)}
-                                        mode='time'
-                                    // is24Hour={false}
-                                    // datePickerModeAndroid='spinner/calendar'
-                                    />
+                                </View>
+                                <DateTimePicker
+                                    isVisible={this.state.startDateTimePickerVisible}
+                                    onConfirm={this.handleStartDatePicked}
+                                    onCancel={() => this.showStartDateTimePicker(false)}
+                                    mode='time'
+                                // is24Hour={false}
+                                // datePickerModeAndroid='spinner/calendar'
+                                />
+                                <DateTimePicker
+                                    isVisible={this.state.endDateTimePickerVisible}
+                                    onConfirm={this.handleEndDatePicked}
+                                    onCancel={() => this.showEndDateTimePicker(false)}
+                                    mode='time'
+                                // is24Hour={false}
+                                // datePickerModeAndroid='spinner/calendar'
+                                />
 
-                                    {/* <Item disabled> */}
-                                    {/* <TouchableOpacity onPress={() => this.showStartDateTimePicker(true)}> */}
-                                    {/* <Input */}
-                                    {/* value='hello' */}
-                                    {/* disabled placeholder='Disabled Textbox' /> */}
-                                    {/* </TouchableOpacity> */}
-
-                                    {/* <TouchableOpacity onPress={() => this.showEndDateTimePicker(true)}>
-                                            <Input
-                                                value='hello'
-                                                disabled placeholder='Disabled Textbox' />
-                                        </TouchableOpacity> */}
-                                    {/* <Icon name='information-circle' /> */}
-                                    {/* </Item> */}
-                                </Form>
                             </View>
 
                             <View>
@@ -246,11 +242,12 @@ export default class Companies extends React.Component {
 
                                 <Button full
                                     info onPress={() => this.addCompany()}>
-                                    <Text>add my company</Text>
+                                    <Text>add my company</Text> 
                                 </Button>
                             </View>
 
                         </View>
+
                     </Modal>
 
                     <Button block onPress={() => {
