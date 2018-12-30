@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Alert, Image, } from 'react-native';
+import { TextInput, Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Alert, Image, ScrollView } from 'react-native';
 import { Container, Header, Content, Button, Text, Form, Item, Input, Label, List, ListItem, Icon, Left, Body, Right, } from 'native-base';
 import { Permissions, ImagePicker } from 'expo';
 
@@ -250,7 +250,7 @@ export default class Companies extends React.Component {
     }
 
     render() {
-        let { companyName, since, images, startTime, endTime, } = this.state;
+        let { companyName, since, images, startTime, endTime, searchLocations } = this.state;
         // console.log(images)
         // console.log(companyName, since)
         return (
@@ -368,27 +368,37 @@ export default class Companies extends React.Component {
                         <Container>
                             <Header searchBar rounded style={{ backgroundColor: 'white' }}>
                                 <Item>
-                                    <Icon name="ios-search" />
+                                    <Icon name="close" />
                                     <Input placeholder="Search Your Place Here"
                                         onChangeText={(value) => this.searchLoc(value)}
                                     />
-                                    <Icon name="ios-pin" />
+                                    <Icon name="ios-search" />
                                 </Item>
                                 {/* <Button>
                                     <Text>Search</Text>
                                 </Button> */}
                             </Header>
+                            <ScrollView>
+                                {
+                                    searchLocations.map((value, index) => {
+                                        return (
+                                            <ListItem icon key={index}>
+                                                <Left>
+                                                    {/* <Button style={{ backgroundColor: "#FF9501" }}> */}
+                                                    <Icon name="pin" />
+                                                    {/* </Button> */}
+                                                </Left>
+                                                <Body>
+                                                    <Text>{value.name}</Text>
+                                                </Body>
+                                                <Right>
+                                                    <Icon name="arrow-forward" />
+                                                </Right>
+                                            </ListItem>)
+                                    })
 
-                            <Form>
-                                <Item floatingLabel>
-                                    <Label>Company Name</Label>
-                                    <Input
-                                        onChangeText={(value) => this.setState({ companyName: value })}
-                                        value={companyName}
-                                    />
-                                </Item>
-                            </Form>
-
+                                }
+                            </ScrollView>
                             <Button full
                                 onPress={() => this.setLocModal(false)}>
                                 <Text>cancel</Text>
