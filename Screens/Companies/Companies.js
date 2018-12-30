@@ -28,7 +28,11 @@ export default class Companies extends React.Component {
             since: null,
             images: ['', '', ''],
             startTime: 'N/A',
-            endTime: 'N/A'
+            endTime: 'N/A',
+
+            searchLocations: [],
+            nearLocations: [],
+            search: null,
         };
     }
 
@@ -202,10 +206,53 @@ export default class Companies extends React.Component {
         this.setState({ locModalVisible: visible });
     }
 
+    // getLoc() {
+    //     const { latitude, longitude } = this.state.myProfile.coords;
+    //     // console.log("lat,long", latitude, longitude)
+
+    //     fetch(`https://api.foursquare.com/v2/venues/explore?client_id=1MVO3SD3541GVNH2NO42OXQWNLN502CKOL3GEZR3CT1R3UAI&client_secret=GW511GOZVZYRQFQWW0H5SRKODAX1Y2MHYWVUUMCW004OVGFS&v=20180323&ll=${latitude},${longitude}&radius=5000&limit=5&sortByDistance=1`)
+    //         .then((res) => {
+    //             // console.log("api", res.json())
+    //             return res.json()
+    //         }).then(result => {
+    //             let { nearLocations } = this.state;
+    //             nearLocations = result.response.groups[0].items
+    //             // console.log("result", nearLocations)
+    //             this.setState({
+    //                 nearLocations
+    //             })
+    //         })
+    // }
+
+    async searchLoc(search) {
+        // const { searchQuery } = this.state
+        // let search = e.target.value
+        console.log(search)
+
+        await this.setState({
+            search,
+        })
+
+
+        fetch(`https://api.foursquare.com/v2/venues/search?client_id=ASVQG5NV45XVLQH401WI41QZARQPYIJC4EBF3Q3QXY4YJ2ST&client_secret=SCIPOTJRWOT5PGT5ORQPAVEA5LHHMSE40SLO4KSAIKWEH2ZB&v=20180323&query=${search}&ll=24.883460,67.047375&radius=5000`)
+            .then((res) => {
+                // console.log("api", res)
+                return res.json()
+            }).then(result => {
+                // console.log("result", result.response.venues)
+                let { searchLocations } = this.state;
+                searchLocations = result.response.venues
+                console.log("search result", searchLocations)
+                this.setState({
+                    searchLocations
+                })
+            })
+    }
+
     render() {
         let { companyName, since, images, startTime, endTime, } = this.state;
-        console.log(images)
-        console.log(companyName, since)
+        // console.log(images)
+        // console.log(companyName, since)
         return (
             <Container>
                 <Content padder>
@@ -322,7 +369,9 @@ export default class Companies extends React.Component {
                             <Header searchBar rounded style={{ backgroundColor: 'white' }}>
                                 <Item>
                                     <Icon name="ios-search" />
-                                    <Input placeholder="Search Your Place Here" />
+                                    <Input placeholder="Search Your Place Here"
+                                        onChangeText={(value) => this.searchLoc(value)}
+                                    />
                                     <Icon name="ios-pin" />
                                 </Item>
                                 {/* <Button>
