@@ -409,7 +409,6 @@ export default class Companies extends React.Component {
                                 <Text>add my company</Text>
                             </Button>
 
-
                         </Container>
                     </Modal>
 
