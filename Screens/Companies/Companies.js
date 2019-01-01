@@ -412,6 +412,7 @@ export default class Companies extends React.Component {
                         </Container>
                     </Modal>
 
+
                     <Button block
                         onPress={() => { this.setModalVisible(true) }}>
                         <Text>add</Text>
